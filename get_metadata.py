@@ -9,7 +9,9 @@ from termcolor import cprint
 
 
 RE_TITLE = r'^#\s+(.+)$'
-RE_AUTHOR =r'^##\s+Author:\s+(.+)$'  # TODO Support more than one author
+RE_AUTHOR = r'^##\s+Author:\s+(.+)$'  # TODO Support more than one author
+RE_LIST_ITEM = r'^(\*|-|\+)\s+?(.+)$'
+
 
 def handle_svg(data):
     source = ''.join(data)
@@ -106,6 +108,24 @@ class Notebook(object):
         if lines:
             return ''.join(lines)
 
+    def get_markdown_list_field(self,path):
+        """Retrieve information based on JSON.
+
+        :param path: JSON path.
+        :returns: Information find on the JSON path.
+        :rtype: str
+
+        """
+        lines = jmespath.search(path,self.data)
+        re_list = re.compile(RE_LIST_ITEM, re.MULTILINE)
+        items = []
+        if lines:
+            for line in lines:
+                m = re_list.search(line)
+                if m:
+                    items.append(m.group(2))
+        return items
+        
     def get_metadata(self):
         """Retrieve the metadata from the demo.
 
@@ -123,11 +143,11 @@ class Notebook(object):
 
         self.description = self.get_free_markdown_field('cells[2].source')
 
-        self.references = self.get_free_markdown_field('cells[4].source')
+        self.references = self.get_markdown_list_field('cells[4].source')
 
-        self.keywords = self.get_free_markdown_field('cells[5].source')
+        self.keywords = self.get_markdown_list_field('cells[5].source')
 
-        self.requirements = self.get_free_markdown_field('cells[6].source')
+        self.requirements = self.get_markdown_list_field('cells[6].source')
 
     def get_image(self):
         """Get the image to use as thumbnail.
