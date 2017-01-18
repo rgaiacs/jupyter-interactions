@@ -136,20 +136,6 @@ class Notebook(object):
         else:
             return []
 
-    def get_field_comma_separated_list(self,header):
-        """Information as comma separated list
-
-        :param header: Header name.
-        :returns: List.
-        :rtype: list
-
-        """
-        text = self.get_field_with_header(header)
-        if text:
-            return sum((l.split(',') for l in text.split('\n')[1:]),[])
-        else:
-            return []
-
     def get_metadata(self):
         """Retrieve the metadata from the demo.
 
