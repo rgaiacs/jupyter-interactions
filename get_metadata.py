@@ -94,7 +94,7 @@ class Notebook(object):
             else:
                 validator(text)
 
-    def get_field_all(self,path):
+    def get_field_free_markdown(self,path):
         """Retrieve information based on JSON.
 
         :param path: JSON path.
@@ -106,22 +106,7 @@ class Notebook(object):
         if lines:
             return ''.join(lines)
 
-    def get_field_with_header(self,header):
-        """Retrieve information from one header
-
-        :param header: Header name.
-        :returns: Information under the wanted header.
-        :rtype: str
-
-        """
-        re_header = re.compile('^###\s+(.*)$',re.MULTILINE)
-        for lines in jmespath.search('cells[*].source',self.data):
-            text = ''.join(lines)
-            m = re_header.match(text)
-            if m and m.group(1)==header:
-                return text
-
-    def get_field_markdown_list(self,header,regex):
+    def get_field_markdown_list(self, path, validator):
         """Return list text from markdown cell.
 
         :param header: Header name.
