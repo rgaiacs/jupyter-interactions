@@ -94,7 +94,7 @@ class Notebook(object):
             else:
                 validator(text)
 
-    def get_field_free_markdown(self,path):
+    def get_free_markdown_field(self,path):
         """Retrieve information based on JSON.
 
         :param path: JSON path.
@@ -105,21 +105,6 @@ class Notebook(object):
         lines = jmespath.search(path,self.data)
         if lines:
             return ''.join(lines)
-
-    def get_field_markdown_list(self, path, validator):
-        """Return list text from markdown cell.
-
-        :param header: Header name.
-        :param regex: Regular expression.
-        :returns: List as text.
-        :rtype: str
-
-        """
-        text = self.get_field_with_header(header)
-        if text:
-            return regex.findall(text)
-        else:
-            return []
 
     def get_metadata(self):
         """Retrieve the metadata from the demo.
@@ -136,13 +121,13 @@ class Notebook(object):
         re_author = re.compile(RE_AUTHOR, re.MULTILINE)
         self.author = self.get_field_regex('cells[1].source[0]',re_author, author_validator)
 
-        self.description = self.get_field_all('cells[2].source')
+        self.description = self.get_free_markdown_field('cells[2].source')
 
-        self.references = self.get_field_all('cells[3].source')
+        self.references = self.get_free_markdown_field('cells[4].source')
 
-        self.keywords = self.get_field_all('cells[4].source')
+        self.keywords = self.get_free_markdown_field('cells[5].source')
 
-        self.requirements = self.get_field_all('cells[5].source')
+        self.requirements = self.get_free_markdown_field('cells[6].source')
 
     def get_image(self):
         """Get the image to use as thumbnail.

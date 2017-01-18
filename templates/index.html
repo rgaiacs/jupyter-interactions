@@ -14,7 +14,7 @@
         <ul id="items">
             {% for notebook in notebooks %}
             {% if notebook.valid %}
-            <li class="item" data-keywords="{% if notebook.keywords|length %}{{notebook.keywords|join(',')}}{% endif %}">
+            <li class="item" data-keywords="{% if notebook.keywords %}{{notebook.keywords}}{% endif %}">
                 <header>
                     <h1 class="title"><a target="_blank" href="{{site.notebook_runner_url}}{{notebook.filename|urlencode}}">{{notebook.title|default('Untitled')|markdown}}</a></h1>
                     {% if notebook.author %}
@@ -31,14 +31,9 @@
                     {% endif %}
                     {% if notebook.description %}<div class="description clearfix">{{notebook.description|markdown}}</div>{% endif %}
                     
-                    {% if notebook.references|length %}
+                    {% if notebook.references %}
                     <div class="references">
-                        <h3>References</h3>
-                        <ul>
-                            {% for ref in notebook.references %}
-                            <li>{{ref|markdown}}</li>
-                            {% endfor %}
-                        </ul>
+                    {{ notebook.references|markdown }}
                     </div>
                     {% endif %}
                 </div>
